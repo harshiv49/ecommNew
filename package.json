@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "react-router-dom": "^6.4.2",
+    "sass": "^1.55.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "redux-devtools-extension": "^2.13.9"
+  }
+}

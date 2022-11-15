@@ -1,0 +1,23 @@
+
+body{
+
+  margin: 0;
+padding: 20px 40px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+a:hover{
+  color:rgb(71, 71, 71);
+
+}
+*{
+  box-sizing: border-box;
+  font-family: 'Fasthand', cursive;
+}
+
+
