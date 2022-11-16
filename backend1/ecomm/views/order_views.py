@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from ecomm.models import User,Product,Order,OrderItem,ShippingAddress
 from rest_framework import status
 from ecomm.serializers import OrderSerializer
-
+from datetime import datetime
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -69,7 +69,14 @@ def getOrderById(request,pk):
     except:
         return Response({'detail','Order does not match'},status=status.HTTP_400_BAD_REQUEST)
 
-
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateOrderToPaid(request,pk):
+    order=Order.objects.get(_id=pk)
+    order.isPaid=True
+    order.paidAt=datetime.now()
+    order.save()
+    return Response('order is paid')
 
 
 
