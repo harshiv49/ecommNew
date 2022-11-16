@@ -20,7 +20,6 @@ def addOrderItems(request):
         order=Order.objects.create(
         user=user,
         paymentMethod=data['paymentMethod'],
-        
         totalPrice=data['priceToPay'],
         shippingPrice=data['shippingPrice'],
         taxPrice=data['taxPrice'],
@@ -49,8 +48,8 @@ def addOrderItems(request):
                 image=product.image.url
             )
         #(4) update Stock
-        product.countInStock-=int(item.quantity)
-        product.save()
+            product.countInStock-=int(item.quantity)
+            product.save()
 # we are only using our parent serializer that is OrderSerializer and when we call this it calls for its subsequent serializers like orderItem which is its child and User and for shippingAddress 
     serializer=OrderSerializer(order,many=False)
     return Response(serializer.data)

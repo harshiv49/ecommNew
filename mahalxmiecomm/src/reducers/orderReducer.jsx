@@ -19,6 +19,7 @@ export const orderCreateReducer=(state={},action)=>{
             return{
                 loading:false,
                 success:true,
+                //state will be uploaded wth the payload of get request
                  order:payload
             }
         case myOrderTypes.ORDER_CREATE_FAIL:
