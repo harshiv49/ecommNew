@@ -3,9 +3,17 @@ export const myOrderTypes={
     ORDER_CREATE_SUCCESS:'ORDER_CREATE_SUCCESS',
     ORDER_CREATE_FAIL:'ORDER_CREATE_FAIL',
     ORDER_CREATE_RESET:'ORDER_CREATE_RESET',
+
     ORDER_DETAILS_REQUEST:'ORDER_DETAILS_REQUEST',
     ORDER_DETAILS_SUCCESS:'ORDER_DETAILS_SUCCESS',
-    ORDER_DETAILS_FAIL:'ORDER_DETAILS_FAIL'
+    ORDER_DETAILS_FAIL:'ORDER_DETAILS_FAIL',
+    ORDER_DETAILS_RESET:'ORDER_DETAILS_RESET',
+
+    ORDER_PAY_REQUEST:'ORDER_DETAILS_REQUEST',
+    ORDER_PAY_SUCCESS:'ORDER_DETAILS_SUCCESS',
+    ORDER_PAY_FAIL:'ORDER_DETAILS_FAIL',
+    ORDER_PAY_RESET:'ORDER_PAY_RESET',
+
 }
 
 export const orderCreateReducer=(state={},action)=>{
@@ -56,6 +64,39 @@ export const orderDetailsReducer=(state={loading:true,orderItems:[],shippingAddr
                 loading:false,
                 error:payload
             }
+
+        case myOrderTypes.ORDER_DETAILS_RESET:
+            return{loading:true,orderItems:[],shippingAddress:{}}
+        default:
+            return state
+
+    }
+}
+
+
+
+
+export const orderPayReducer=(state={},action)=>{
+    const {type,payload}=action
+    switch(type){
+        case myOrderTypes.ORDER_PAY_REQUEST:
+            return{
+                ...state,
+                loading:true
+            }
+        case myOrderTypes.ORDER_PAY_SUCCESS:
+            return{
+                loading:false,
+                success:true,
+               
+            }
+        case myOrderTypes.ORDER_PAY_FAIL:
+            return{
+                loading:false,
+                error:payload
+            }
+        case myOrderTypes.ORDER_PAY_RESET:
+            return{}
         default:
             return state
 

@@ -61,9 +61,7 @@ export const createOrder = (order) => async (dispatch,getState) => {
           dispatch({
             type: myOrderTypes.ORDER_DETAILS_SUCCESS,
             payload: data,
-          });   
-
-
+          });
         } 
         catch (error) {
           dispatch({
@@ -76,3 +74,38 @@ export const createOrder = (order) => async (dispatch,getState) => {
         }
       };
       
+
+
+  export const payOrder = (id,paymentResult) => async (dispatch,getState) => {
+  
+    try {
+      const {userLogin:{userInfo}}=getState()
+      const config={
+          headers:{
+          // we need to send the authorization headers as our /users/profile is a restriccetd route for authenticated users only
+            'Content-Type': 'application/json',
+            Authorization:`Bearer ${userInfo.token}` 
+          }
+      }
+  
+      dispatch({ type: myOrderTypes.ORDER_PAY_REQUEST });
+      
+      const { data } = await axios.put(`/api/orders/${id}/pay/`,  paymentResult,config);
+    
+      dispatch({
+        type: myOrderTypes.ORDER_PAY_SUCCESS,
+        payload: data,
+      });
+    } 
+    catch (error) {
+      dispatch({
+        type:myOrderTypes.ORDER_PAY_FAIL,
+        payload:
+          error.response && error.response.data.detail
+            ? error.response.data.detail
+            : error.message,
+      });
+    }
+  };
+  
+

@@ -45,6 +45,25 @@ const  Navigation=()=>{
          )
         }
 
+        {userInfo&&userInfo.isAdmin?(
+          <NavDropdown id='admin-menu' title='Admin'>
+              <LinkContainer to='/admin/userList'>
+               <NavDropdown.Item>Users</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to='/admin/productList'>
+               <NavDropdown.Item>Products</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to='/admin/orderList'>
+               <NavDropdown.Item>Orders</NavDropdown.Item>
+              </LinkContainer>
+          </NavDropdown>
+            
+         ):(
+          <Link className="nav-link" to='/login'>
+         SIGN IN 
+         </Link>
+         )
+        }
          
          <CartIcon/>
 

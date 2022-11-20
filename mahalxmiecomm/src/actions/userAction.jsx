@@ -1,5 +1,7 @@
 import { myActionsUsers } from "../reducers/userReducers";
 import axios from 'axios'; 
+
+
 //login
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -10,7 +12,7 @@ export const login = (email, password) => async (dispatch) => {
         }
     }
 
-    dispatch({ type: myActionsUsers.LOGIN_REQUEST });
+    dispatch({ type: myActionsUsers.LIST_REQUEST });
     const { data } = await axios.post(
         "/api/users/login/",
         {'email':email,'password':password},
@@ -18,14 +20,14 @@ export const login = (email, password) => async (dispatch) => {
     );
 
     dispatch({
-      type: myActionsUsers.LOGIN_SUCCESS,
+      type: myActionsUsers.LIST_SUCCESS,
       payload: data,
     });
     localStorage.setItem('userInfo',JSON.stringify(data))   
   } 
   catch (error) {
     dispatch({
-      type: myActionsUsers.LOGIN_FAIL,
+      type: myActionsUsers.LIST_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail
@@ -39,7 +41,8 @@ export const login = (email, password) => async (dispatch) => {
 export const logout=()=>(dispatch)=>{
   localStorage.removeItem('userInfo')
   dispatch({type:myActionsUsers.LOGOUT})
-
+  dispatch({type:myActionsUsers.LIST_RESET})
+  
 }
 
 
@@ -166,6 +169,51 @@ export const updateUserProfile = (user) => async (dispatch,getState) => {
   catch (error) {
     dispatch({
       type: myActionsUsers.PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+
+
+//from frontend when we call this action we pass in the id 
+export const listUsers = () => async (dispatch,getState) => {
+  try {
+    const {
+      userLogin:{userInfo},
+    }=getState()
+
+
+    const config={
+      
+        headers:{
+        // we need to send the authorization headers as our /users/profile is a restriccetd route for authenticated users only
+          'Content-Type': 'application/json',
+          Authorization:`Bearer ${userInfo.token}` 
+        }
+    }
+
+    dispatch({ type: myActionsUsers.LIST_REQUEST });
+    const { data } = await axios.get(
+        `/api/users/`,
+        config
+    );
+  
+    dispatch({
+      type: myActionsUsers.LIST_SUCCESS,
+      payload: data,
+    });
+
+    
+    
+  } 
+  catch (error) {
+    dispatch({
+      type: myActionsUsers.LIST_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

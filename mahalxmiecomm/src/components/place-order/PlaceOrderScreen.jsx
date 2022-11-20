@@ -55,7 +55,7 @@ function PlaceOrder() {
       dispatch({type:'ORDER_CREATE_RESET'})
       dispatch(clearCart())
     }
-  },[dispatch,success,navigate])
+  },[dispatch,success,navigate,order._id])
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>

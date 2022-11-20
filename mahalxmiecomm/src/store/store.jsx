@@ -3,12 +3,12 @@ import thunk from 'redux-thunk';
 import {composeWithDevTools} from  'redux-devtools-extension';
 import logger from 'redux-logger'
 import { productListReducer} from '../reducers/productReducers';
-import { userLoginReducer, userRegisterReducer,userDetailsReducer,userUpdateProfileReducer } from '../reducers/userReducers';
+import { userLoginReducer, userRegisterReducer,userDetailsReducer,userUpdateProfileReducer,userListReducer } from '../reducers/userReducers';
 import storage from 'redux-persist/lib/storage'
 import { cartReducer } from '../cart/cart_reducer';
 import {persistStore,persistReducer} from 'redux-persist'
 import { productDetailsReducer } from '../reducers/productReducers';
-import { orderCreateReducer,orderDetailsReducer } from '../reducers/orderReducer';
+import { orderCreateReducer,orderDetailsReducer, orderPayReducer } from '../reducers/orderReducer';
 const persistConfig={
     key:'root',
     storage,
@@ -28,6 +28,8 @@ const reducer=combineReducers({
     productDetails:productDetailsReducer,
     orderCreate:orderCreateReducer,
     orderDetails:orderDetailsReducer,
+    orderPay:orderPayReducer,
+    userList:userListReducer
 
 })
 
