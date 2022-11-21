@@ -221,3 +221,96 @@ export const listUsers = () => async (dispatch,getState) => {
     });
   }
 };
+
+
+//from frontend when we call this action we pass in the id 
+export const deleteUser = (id) => async (dispatch,getState) => {
+  try {
+    const {
+      userLogin:{userInfo},
+    }=getState()
+
+
+    const config={
+      
+        headers:{
+        // we need to send the authorization headers as our /users/profile is a restriccetd route for authenticated users only
+          'Content-Type': 'application/json',
+          Authorization:`Bearer ${userInfo.token}` 
+        }
+    }
+
+    dispatch({ type: myActionsUsers.DELETE_REQUEST });
+    const { data } = await axios.delete(
+        `/api/users/delete/${id}/`,
+        config
+    );
+  
+    dispatch({
+      type: myActionsUsers.DELETE_SUCCESS,
+      payload: data,
+    });
+
+    
+    
+  } 
+  catch (error) {
+    dispatch({
+      type: myActionsUsers.DELETE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};
+
+
+
+export const userEditFromAdmin = (user) => async (dispatch,getState) => {
+  try {
+    const {
+      userLogin:{userInfo},
+    }=getState()
+
+
+    const config={
+      
+        headers:{
+        // we need to send the authorization headers as our /users/profile is a restriccetd route for authenticated users only
+          'Content-Type': 'application/json',
+          Authorization:`Bearer ${userInfo.token}` 
+        }
+    }
+
+    dispatch({ type: myActionsUsers.EDIT_ADMIN_REQUEST });
+    const { data } = await axios.put(
+        `/api/users/update/${user._id}/`,
+        user,
+        config
+    );
+  
+    dispatch({
+      type: myActionsUsers.EDIT_ADMIN_SUCCESS,
+     
+    });
+
+    dispatch({
+      type: myActionsUsers.DETAILS_SUCCESS,
+      payload:data,
+     
+    });
+
+    
+    
+  } 
+  catch (error) {
+    dispatch({
+      type: myActionsUsers.EDIT_ADMIN_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};

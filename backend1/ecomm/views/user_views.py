@@ -120,4 +120,45 @@ def registerUser(request):
         message={'detail':'User with this email already exist'}
         return Response(message,status=status.HTTP_400_BAD_REQUEST)
     #to return the jsonRepsonse of the user created in pur database
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def getUserById(request,pk):
+    user=User.objects.get(id=pk)
+    serializer=UserSerializer(user,many=False)
+    return Response(serializer.data)
+
+
+# as we preferably only want to create a new resource or replaces a representation of the target resource with the request payload we use put request here
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateUserByAdmin(request,pk):
+    
+    #remember we get the user object form the token we send not the default django auth user 
+    user=User.objects.get(id=pk)
+    
+    #give  us back the new information with our required fields 
+    data=request.data
+
+    user.first_name=data['name']
+    user.username=data['email']
+    if data['email']!='':
+        user.email=data['email']
+    
+    user.is_staff=data['isAdmin']
+
+    user.save()
+    serializer=UserSerializer(user,many=False)
+    return Response(serializer.data)
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def deleteUser(request,pk):
+    userForDeletion=User.objects.get(id=pk)
+    userForDeletion.delete()
+    return Response('User Was Deleted')
+
+
    

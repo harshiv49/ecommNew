@@ -17,18 +17,18 @@ const ProductScreen=()=>{
     // fetchProduct();
     dispatch(listProductDetails(params.id))
 },[dispatch])
-   const productDetails=useSelector(state=>state.productDetail)
+   const productDetails=useSelector(state=>state.productDetails)
    console.log('i am product details ',productDetails)
-   const {error,loading,product}=productDetails
+   const {loading,product}=productDetails
     // const product = products.find((p) => p._id == params.id);
-    const {imageUrl,id,name,price,description,rating,numReviews,countInStock}=product;
+    const {image,id,name,price,description,rating,numReviews,countInStock}=product;
     // we can use parammetres which are dynamically passed in the URL by this useParams() method  const price=parseInt(params.price)+100; can also obvioulsy pass it in our html with return 
     return(
        <div>
        <Link to='/' className='btn btn-light my-3'> Go back </Link>
         <Row>
         <Col md={6}>
-            <Image src={imageUrl} alt={`${name}`} fluid/>
+            <Image src={image} alt={`${name}`} fluid/>
         </Col>
         <Col md={3}>
             <ListGroup variant='flush'>

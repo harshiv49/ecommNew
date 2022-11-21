@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import {composeWithDevTools} from  'redux-devtools-extension';
 import logger from 'redux-logger'
 import { productListReducer} from '../reducers/productReducers';
-import { userLoginReducer, userRegisterReducer,userDetailsReducer,userUpdateProfileReducer,userListReducer } from '../reducers/userReducers';
+import { userLoginReducer, userRegisterReducer,userDetailsReducer,userUpdateProfileReducer,userListReducer,userDeleteReducer,userEditFromAdmin } from '../reducers/userReducers';
 import storage from 'redux-persist/lib/storage'
 import { cartReducer } from '../cart/cart_reducer';
 import {persistStore,persistReducer} from 'redux-persist'
@@ -29,7 +29,9 @@ const reducer=combineReducers({
     orderCreate:orderCreateReducer,
     orderDetails:orderDetailsReducer,
     orderPay:orderPayReducer,
-    userList:userListReducer
+    userList:userListReducer,
+    userDelete:userDeleteReducer,
+    userEditAdmin:userEditFromAdmin,
 
 })
 

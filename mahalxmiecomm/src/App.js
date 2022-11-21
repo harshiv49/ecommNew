@@ -13,6 +13,8 @@ import PaymentScreen from "./components/payment-screen/PaymentScreen";
 import PlaceOrder from "./components/place-order/PlaceOrderScreen";
 import OrderScreen from "./components/order-screen/OrderScreen";
 import UserListScreen from "./components/user-login/userListScreen";
+import EditUserScreen from "./components/user-admin-edit/userEdit";
+import AdminProductListScreen from "./components/product-list-admin/adminProductList";
 function App() {
   //we use Routes to wrap anything that is routable inside this app component
   //Route is a component which renders a specific component if it matches the path
@@ -33,6 +35,8 @@ function App() {
         <Route path="order/:id" element={<OrderScreen />} />
       <Route path="admin/userList" element={<UserListScreen />} />
       <Route path="products/:id" element={<ProductScreen />} />
+      <Route path="admin/user/:id/edit" element={<EditUserScreen />} />
+      <Route path="admin/productList" element={<AdminProductListScreen/>} />
       </Route>
     </Routes>
   );
