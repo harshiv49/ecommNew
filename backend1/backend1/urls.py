@@ -21,8 +21,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('api/',include('ecomm.urls')),
+    path('api/products/',include('ecomm.urls.product_urls')),
      path('api/orders/',include('ecomm.urls.order_urls')),
-     path('api/products/',include('ecomm.urls.product_urls')),
+     
      path('api/users/',include('ecomm.urls.user_urls')),
 ]
 #we are setting the url and we pass in which folder to look into 

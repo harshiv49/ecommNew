@@ -79,6 +79,12 @@ def updateOrderToPaid(request,pk):
     return Response('order is paid')
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getOrders(request):
+    orders=Order.objects.all()
+    serializer=OrderSerializer(orders,many=True)
+    return Response(serializer.data)
 
 
 

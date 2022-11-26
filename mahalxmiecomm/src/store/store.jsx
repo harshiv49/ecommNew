@@ -7,8 +7,8 @@ import { userLoginReducer, userRegisterReducer,userDetailsReducer,userUpdateProf
 import storage from 'redux-persist/lib/storage'
 import { cartReducer } from '../cart/cart_reducer';
 import {persistStore,persistReducer} from 'redux-persist'
-import { productDetailsReducer } from '../reducers/productReducers';
-import { orderCreateReducer,orderDetailsReducer, orderPayReducer } from '../reducers/orderReducer';
+import { productDetailsReducer,productDeleteReducer,productCreateReducer,productUpdateReducer } from '../reducers/productReducers';
+import { orderCreateReducer,orderDetailsReducer, orderPayReducer,adminListReducer } from '../reducers/orderReducer';
 const persistConfig={
     key:'root',
     storage,
@@ -32,7 +32,10 @@ const reducer=combineReducers({
     userList:userListReducer,
     userDelete:userDeleteReducer,
     userEditAdmin:userEditFromAdmin,
-
+    productDelete:productDeleteReducer,
+    productCreate:productCreateReducer,
+    productUpdate:productUpdateReducer,
+    adminOrderList:adminListReducer,
 })
 
 const persistedReducer=persistReducer(persistConfig,reducer)

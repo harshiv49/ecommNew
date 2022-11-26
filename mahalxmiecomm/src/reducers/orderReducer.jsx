@@ -9,10 +9,17 @@ export const myOrderTypes={
     ORDER_DETAILS_FAIL:'ORDER_DETAILS_FAIL',
     ORDER_DETAILS_RESET:'ORDER_DETAILS_RESET',
 
-    ORDER_PAY_REQUEST:'ORDER_DETAILS_REQUEST',
-    ORDER_PAY_SUCCESS:'ORDER_DETAILS_SUCCESS',
-    ORDER_PAY_FAIL:'ORDER_DETAILS_FAIL',
+    ORDER_PAY_REQUEST:'ORDER_PAY_REQUEST',
+    ORDER_PAY_SUCCESS:'ORDER_PAY_SUCCESS',
+    ORDER_PAY_FAIL:'ORDER_PAY_FAIL',
     ORDER_PAY_RESET:'ORDER_PAY_RESET',
+
+
+    
+    ORDER_ADMIN_LIST_REQUEST:'ORDER_ADMIN_LIST_REQUEST',
+    ORDER_ADMIN_LIST_SUCCESS:'ORDER_ADMIN_LIST_SUCCESS',
+    ORDER_ADMIN_LIST_FAIL:'ORDER_ADMIN_LIST_FAIL',
+    ORDER_ADMIN_LIST_RESET:'ORDER_ADMIN_LIST_RESET',
 
 }
 
@@ -102,3 +109,34 @@ export const orderPayReducer=(state={},action)=>{
 
     }
 }
+
+
+export const adminListReducer=(state={orders:[]},action)=>{
+    const {type,payload}=action  
+    switch(type){
+      case myOrderTypes.ORDER_ADMIN_LIST_REQUEST:
+        return{
+        loading:true
+        }
+      case myOrderTypes.ORDER_ADMIN_LIST_SUCCESS:
+        return{
+          loading:false,
+          orders:payload
+        }
+        case myOrderTypes.ORDER_ADMIN_LIST_FAIL:
+          return{
+            loading:false,
+            error:payload
+          } 
+      case myOrderTypes.ORDER_ADMIN_LIST_RESET:
+        return{
+          orders:[]
+        } 
+
+      default:
+        return state
+
+  }
+}
+  
+

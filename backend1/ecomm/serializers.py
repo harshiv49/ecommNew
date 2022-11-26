@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ecomm.models import User,Product,Order,OrderItem,ShippingAddress
+from ecomm.models import User,Product,Order,OrderItem,ShippingAddress,Review
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 
@@ -35,11 +35,25 @@ class UserSerializerWithToken(UserSerializer):
         token=RefreshToken.for_user(obj)
         return str(token.access_token)
 
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Review
+        fields='__all__'
+
+
 class ProductSerializer(serializers.ModelSerializer):
+    reviews=serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model=Product
         fields='__all__'
-    
+    #this is done to nest all the reviews of the product
+    def get_reviews(self,obj):
+        reviews=obj.review_set.all()
+        serializer=ReviewSerializer(reviews,many=True)
+        return serializer.data
+
 
 class ShippingAddressSerializer(serializers.ModelSerializer):
     class Meta:
@@ -59,19 +73,20 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model=Order
         fields='__all__'
-
+#this is done to nest all the orderItems of the order
     def get_orderItems(self,obj):
+        #obj is the model itself of our class Meta
         items=obj.orderitem_set.all()
         serializer=OrderItemSerializer(items,many=True)
         return serializer.data
-
+#this is done to nest  the shippingAddress of the order
     def get_shippingAddress(self,obj):
         try:
             address=ShippingAddressSerializer(obj.shippingaddress,many=False).data
         except:
             address=False
         return address
-
+#this is done to nest  the userInfo of the order
     def get_user(self,obj):
         user=obj.user
         serializer=UserSerializer(user,many=False)
