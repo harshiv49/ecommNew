@@ -1,5 +1,6 @@
 import { Outlet,Link } from "react-router-dom";
 import { Fragment, useContext } from "react";
+import { Form } from "react-bootstrap";
 import { ReactComponent as CrwnLogo } from '../../assets/crown.svg';
 // import { CartContext } from "../../context/cart_context";
 import { selectIsCartOpen } from "../../cart/cart_selector";
@@ -10,6 +11,7 @@ import CartDropDown from "../../components/cart-dropdown/cart_dropdown_component
 import { useDispatch,useSelector } from "react-redux";
 import {LinkContainer} from 'react-router-bootstrap';
 import { logout } from "../../actions/userAction";
+import SearchBox from "../../components/search-box/searchBox";
 const  Navigation=()=>{  
     // const {isCartOpen}=useContext(CartContext)
     const isCartOpen=useSelector(selectIsCartOpen)
@@ -22,14 +24,20 @@ const  Navigation=()=>{
     //we can import svg file images as components 
     return(
      <Fragment>
+
        <div className="navigation">
+       
          <Link className="logo-container" to="/">
                <CrwnLogo className="logo"/>
          </Link>
+         <SearchBox/>
          <div className="nav-links-container">
+        
          <Link className="nav-link" to='/shop'>
          SHOP
          </Link>
+         
+         
          {userInfo?(
           <NavDropdown id='username' title={userInfo.name}>
               <LinkContainer to='/profile'>

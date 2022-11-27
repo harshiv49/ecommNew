@@ -16,7 +16,13 @@ from ecomm.models import Product,Review
 #multiple prooducts
 @api_view(['GET'])
 def getProducts(request):
-    products=Product.objects.all()
+    #access the params passed in the get request 
+    query=request.query_params.get('keyword')
+    print('query:',query)
+    if query==None:
+        query=''
+    # The icontains lookup is used to get records that contains a specified value.
+    products=Product.objects.filter(name__icontains=query)
     serializer=ProductSerializer(products,many=True)    
     return Response(serializer.data) 
 
@@ -81,17 +87,18 @@ def createProductReview(request,pk):
     user=request.user
     product=Product.objects.get(_id=pk)
     data=request.data
+    print(data)
     #1 Review already exists
     # get the reviews of this product and check wether our current user has that 
     alreadyExists=product.review_set.filter(user=user).exists()
     if alreadyExists:
-        content={'details':'Product already exists '}
+        content={'detail':'Review already exists '}
         return Response(content,status=status.HTTP_400_BAD_REQUEST)
 
     #2 No Rating or 0
 
     elif data['rating']==0:
-        content={'details':'Please select a rating '}
+        content={'detail':'Please select a rating '}
         return Response(content,status=status.HTTP_400_BAD_REQUEST)
 
     #create Review

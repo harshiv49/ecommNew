@@ -8,7 +8,7 @@ import {  useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import { listProducts } from '../../actions/productActions';
 import Loader from '../../components/loader/loader';
-
+import { useLocation } from 'react-router-dom';
 function Home() {
   /* 
    const [products,setProducts]=useState([]);
@@ -20,11 +20,14 @@ function Home() {
     fetchProducts();
   },[])
   */
-  
+  const location=useLocation()
+  const keyword=location.search
+  console.log('keyword',keyword)
   const dispatch=useDispatch()
+   
   useEffect(()=>{
-    dispatch(listProducts())
-  },[dispatch])
+    dispatch(listProducts(keyword))
+  },[dispatch,keyword])
 
   const payList=useSelector(state=>state.productList)
   const {products,error,loading}=payList
