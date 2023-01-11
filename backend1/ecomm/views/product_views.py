@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from ecomm.models import User
-
+from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
 
@@ -23,8 +23,23 @@ def getProducts(request):
         query=''
     # The icontains lookup is used to get records that contains a specified value.
     products=Product.objects.filter(name__icontains=query)
-    serializer=ProductSerializer(products,many=True)    
-    return Response(serializer.data) 
+    page=request.query_params.get('page')
+    paginator=Paginator(products,2)
+    try:
+        products=paginator.page(page)
+    #if the page entered is not an integer that is intially or otherwise return the first page
+    except PageNotAnInteger:
+        products=paginator.page(1)
+    #if user enters a undefined number of the page return the last page 
+    except EmptyPage:
+        products=paginator.page(paginator.num_pages)
+    
+    if page==None:
+        page=1
+    page=int(page)
+    serializer=ProductSerializer(products,many=True)  
+    #previously our api call or our view only returned the product related fields  as Json now we send the products page and the pages field so we have to change our reducer accordingly
+    return Response({'products':serializer.data,'page':page,'pages':paginator.num_pages}) 
 
 
 #single prooduct
@@ -33,6 +48,15 @@ def getProduct(request,pk):
     productRequired=Product.objects.get(_id=pk)
     serializer=ProductSerializer(productRequired,many=False)  
     return Response(serializer.data) 
+
+
+#single prooduct
+@api_view(['GET'])
+def getTopProducts(request):
+    products=Product.objects.filter(rating__gte=0).order_by('rating')
+    serializer=ProductSerializer(products,many=True)
+    return Response(serializer.data)
+
 
 
 #create prooduct
@@ -91,7 +115,7 @@ def createProductReview(request,pk):
     #1 Review already exists
     # get the reviews of this product and check wether our current user has that 
     alreadyExists=product.review_set.filter(user=user).exists()
-    if alreadyExists:
+    if alreadyExists: 
         content={'detail':'Review already exists '}
         return Response(content,status=status.HTTP_400_BAD_REQUEST)
 
@@ -122,3 +146,12 @@ def createProductReview(request,pk):
         product.save()
 
     return Response('Review added') 
+
+@api_view(['POST'])
+def uploadImage(request):
+    data=request.data
+    product_id=data['product_id']
+    product=Product.objects.get(_id=product_id)
+    product.image=request.FILES.get('images')
+    product.save()
+    return Response('Image was uploaded')

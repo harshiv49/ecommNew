@@ -5,8 +5,9 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
+import { PayPalButtons } from "@paypal/react-paypal-js";
 import { selectCartTotal } from "../../cart/cart_selector";
-import { createOrder } from "../../actions/orderCreateAction";
+import { createOrder, listMyOrders } from "../../actions/orderCreateAction";
 import {
   Button,
   Row,
@@ -24,8 +25,8 @@ import { Link } from "react-router-dom";
 import Message from "../message/message";
 import { clearCart } from "../../cart/cart_action";
 
-import { getOrderDetails } from "../../actions/orderCreateAction";
-
+import { getOrderDetails, payOrder } from "../../actions/orderCreateAction";
+import { myOrderTypes } from "../../reducers/orderReducer";
 function OrderScreen() {
   const cart = useSelector((state) => state.cart);
   const { cartItems, shippingAddress, paymentMethod } = cart;
@@ -44,6 +45,16 @@ function OrderScreen() {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, error, loading } = orderDetails;
+
+  const orderPay = useSelector((state) => state.orderPay);
+  const { loading: loadingPay, success: successPay } = orderPay;
+
+
+  
+  const successPaymentHandler = (paymentResult) => {
+    dispatch(payOrder(orderId, paymentResult));
+  };
+
   if (!loading && !error) {
     order.itemsPrice = order.orderItems.reduce(
       (total, Item) => total + Item.quantity * Item.price,
@@ -52,8 +63,10 @@ function OrderScreen() {
   }
 
   useEffect(() => {
-    if (!order || order._id !== Number(orderId)) {
+    if (!order  || order._id !== Number(orderId)) {
+      dispatch({ type: myOrderTypes.ORDER_PAY_RESET });
       dispatch(getOrderDetails(orderId));
+ 
     }
   }, [order, orderId, dispatch]);
 
@@ -64,19 +77,30 @@ function OrderScreen() {
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
-            
-          <ListGroup.Item>
+            <ListGroup.Item>
               <h2>Shipping</h2>
-              <p><strong>Name:</strong>{order.user.name}</p>
-              <p><strong>Email:</strong><a href={`mailto:${order.user.email}`}>{order.user.email}</a></p>
+
+              <p>
+                <strong>Name:</strong>
+                {order.user.username}
+              </p>
+              <p>
+                <strong>Email:</strong>
+                <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+              </p>
               <p>
                 <strong>Shipping:</strong>
                 {order.shippingAddress.address},{order.shippingAddress.city},
                 {order.shippingAddress.state}
                 {"  "}
-                {order.shippingAddress.postalCode},{order.shippingAddress.country}
-                {order.isPaid?<Message variant='success'>Delivered On {order.paidAt}</Message>:(
-                    <Message variant='warning'>Not Delivered</Message>
+                {order.shippingAddress.postalCode},
+                {order.shippingAddress.country}
+                {order.isPaid ? (
+                  <Message variant="success">
+                    Delivered On {order.paidAt}
+                  </Message>
+                ) : (
+                  <Message variant="warning">Not Delivered</Message>
                 )}
               </p>
             </ListGroup.Item>
@@ -84,22 +108,21 @@ function OrderScreen() {
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <strong>Method:</strong>
-                {order.paymentMethod}
+              {order.paymentMethod}
               <p>
-                
-
-                {order.isPaid?<Message variant='success'>Paid On {order.paidAt}</Message>:(
-                    <Message variant='warning'>Not Paid</Message>
+                {order.isPaid ? (
+                  <Message variant="success">Paid On {order.paidAt}</Message>
+                ) : (
+                  <Message variant="warning">Not Paid</Message>
                 )}
               </p>
             </ListGroup.Item>
-            
+
             <ListGroup.Item>
               <h2>Order Items</h2>
               {order.orderItems.length === 0 ? (
                 <Message variant="info">
-                  You have No Orders browse our Store If confused about anything
-                  contact our store today
+                  This is order with no orderItems
                 </Message>
               ) : (
                 <ListGroup variaint="flush">
@@ -166,6 +189,7 @@ function OrderScreen() {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+             
             </ListGroup>
           </Card>
         </Col>

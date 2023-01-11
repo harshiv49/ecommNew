@@ -9,7 +9,8 @@ import { addItemToCart } from '../../cart/cart_action';
 import Rating from '../rating/rating_component';
 const ProductCard=({product})=>{
    
-    const {name,price,imageUrl,rating,numReviews,id}=product;
+    const {name,price,imageUrl,rating,numReviews,_id}=product;
+    
     // const {addItemToCart}=useContext(CartContext);
     const cartItems=useSelector(selectCartItems)
     const dispatch=useDispatch()
@@ -17,7 +18,7 @@ const ProductCard=({product})=>{
     const navigate=useNavigate();
     const goToProductViewHandler=()=>{
         //only thing that seperates absolute path in react to relative path is the /  
-        navigate(`/api/products/${id}`);
+        navigate(`/products/${_id}`);
     }
     return(
     <div className='product-card-container'>

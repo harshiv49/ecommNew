@@ -9,6 +9,8 @@ import {useDispatch} from 'react-redux';
 import { listProducts } from '../../actions/productActions';
 import Loader from '../../components/loader/loader';
 import { useLocation } from 'react-router-dom';
+import Paginate from '../../components/paginate/Paginate';
+import ProductCarousel from '../../components/product-carousel/ProductCarousel';
 function Home() {
   /* 
    const [products,setProducts]=useState([]);
@@ -22,15 +24,16 @@ function Home() {
   */
   const location=useLocation()
   const keyword=location.search
-  console.log('keyword',keyword)
+  // console.log('keyword',keyword)
   const dispatch=useDispatch()
    
   useEffect(()=>{
     dispatch(listProducts(keyword))
   },[dispatch,keyword])
 
-  const payList=useSelector(state=>state.productList)
-  const {products,error,loading}=payList
+  const productList=useSelector(state=>state.productList)
+  const {products,error,loading,page,pages}=productList
+  // console.log('pages',pages)
   const categories=[
     {
       "id": 1,
@@ -70,7 +73,9 @@ function Home() {
   return (
     <div>
     <Outlet/>
+    
     <ShopWallpaper image={homeWallpaper}></ShopWallpaper>
+    {!keyword&&<ProductCarousel></ProductCarousel>}
     <h1 style={Mystyle}>MAJOR CATEGORIES</h1>
     <Directory categories={categories}>
     </Directory>
@@ -79,11 +84,12 @@ function Home() {
     {loading?<Loader/>:error?<message variant='danger'>{error}</message>:
     <div className="products-container">
         {products.map((product) => {
-          return <ProductCard key={product.id} product={product}></ProductCard>;
+          return <ProductCard key={product._id} product={product}></ProductCard>;
         })}
       </div>
    
       }
+<Paginate page={page} pages={pages} keyword={keyword} ></Paginate>
       </div>
     
   );

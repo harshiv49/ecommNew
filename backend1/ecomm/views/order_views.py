@@ -11,6 +11,7 @@ from datetime import datetime
 @permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user=request.user
+    print(user)
     data=request.data
     orderItems=data['orderItems']
     if orderItems and len(orderItems)==0:
@@ -86,5 +87,10 @@ def getOrders(request):
     serializer=OrderSerializer(orders,many=True)
     return Response(serializer.data)
 
-
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getMyOrders(request):
+    user=request.user
+    orders=user.order_set.all()
+    serializer=OrderSerializer(orders,many=True)
+    return Response(serializer.data)

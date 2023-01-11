@@ -1,5 +1,6 @@
 import { myActionsUsers } from "../reducers/userReducers";
 import axios from 'axios'; 
+import { myOrderTypes } from "../reducers/orderReducer";
 
 
 //login
@@ -42,7 +43,7 @@ export const logout=()=>(dispatch)=>{
   localStorage.removeItem('userInfo')
   dispatch({type:myActionsUsers.LOGOUT})
   dispatch({type:myActionsUsers.LIST_RESET})
-  
+  dispatch({type:myOrderTypes.ORDER_LIST_MY_RESET})
 }
 
 

@@ -52,7 +52,8 @@ function AdminOrderListScreen() {
               return (
                 <tr key={order._id}>
                   <td>{order._id}</td>
-                  <td>{order.user && order.user.name}</td>
+                  {console.log(order.user)}
+                  <td>{order.user && order.user.username}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
                   <td>${order.totalPrice}</td>
                   <td>

@@ -139,3 +139,37 @@ export const adminListOrders = () => async (dispatch, getState) => {
     });
   }
 };
+
+
+export const listMyOrders = () => async (dispatch, getState) => {
+  
+  try {
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        // we need to send the authorization headers as our /users/profile is a restriccetd route for authenticated users only
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    dispatch({ type: myOrderTypes.ORDER_LIST_MY_REQUEST });
+
+    const { data } = await axios.get(`/api/orders/myorders/`, config);
+
+    dispatch({
+      type: myOrderTypes.ORDER_LIST_MY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: myOrderTypes.ORDER_LIST_MY_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};

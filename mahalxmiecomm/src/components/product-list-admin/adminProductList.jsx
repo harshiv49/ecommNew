@@ -1,20 +1,19 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row,Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, register } from "../../actions/userAction";
-import FormContainer from "../form-container/FormContainer";
 import { listProducts,deleteProduct, createProduct} from "../../actions/productActions";
 import Loader from "../loader/loader";
 import Message from "../message/message";
 import { myActionsProductList } from "../../reducers/productReducers";
-
+import Paginate from "../paginate/Paginate";
+import { Fragment } from "react";
 function  AdminProductListScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const productList=useSelector(state=>state.productList);
-  const {loading,error,products}=productList
+  const {loading,error,products,pages,page}=productList
 
   const productDelete=useSelector(state=>state.productDelete);
   const {loading:loadingDelete,error:errorDelete,success:successDelete}=productDelete
@@ -83,6 +82,7 @@ function  AdminProductListScreen() {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
+        <Fragment>
         <Table stripped bordered hover responsive className="table-sm">
           <thead>
             <tr>
@@ -125,6 +125,8 @@ function  AdminProductListScreen() {
           
           </tbody>
         </Table>
+        <Paginate pages={pages} page={page} isAdmin={true} ></Paginate>
+        </Fragment>
       )}
     </div>
   );

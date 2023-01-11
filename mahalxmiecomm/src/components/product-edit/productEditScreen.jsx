@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { Fragment } from "react";
 import { myActionsProductList } from "../../reducers/productReducers";
 import { updateProduct } from "../../actions/productActions";
+import axios from "axios";
 function EditProductScreen({ children }) {
   const params = useParams();
   const productId = params.id;
@@ -22,6 +23,8 @@ function EditProductScreen({ children }) {
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
+  const [uploading, setUploading] = useState(false);
+
 
   const dispatch = useDispatch();
 
@@ -36,6 +39,33 @@ function EditProductScreen({ children }) {
     success: successUpdate,
     product:createdProduct
   } = productUpdate;
+
+  const uploadFileHandler=async(e)=>{
+    // console.log('File is uploading ')
+    const file=e.target.files[0]
+    const formData=new FormData()
+
+    formData.append('images',file)
+    formData.append('product_id',productId)
+
+    setUploading(true)
+
+    try {
+      const config={
+        headers:{
+          'Content-Type':'multipart/form-data'
+        }
+      }
+      const {data}=await axios.post('/api/products/upload/',formData,config)
+      
+      setImage(image)
+      setUploading(false)
+    } catch (error) {
+      setUploading(false)
+    }
+
+  }
+
 
   //if userinfo exist we want to redirect
   useEffect(() => {
@@ -98,6 +128,7 @@ function EditProductScreen({ children }) {
                 type="name"
                 placeholder="Enter Username"
                 value={name}
+                //The target event property returns the element that triggered the event. syntax event.target
                 onChange={(event) => setName(event.target.value)}
               ></Form.Control>
             </Form.Group>
@@ -119,6 +150,15 @@ function EditProductScreen({ children }) {
                 value={image}
                 onChange={(event) => setImage(event.target.value)}
               ></Form.Control>
+              <Form.Control
+              type='file'
+              id='image-file'
+              label='Choose File '
+              onChange={uploadFileHandler}
+              >
+              
+              </Form.Control>
+              {uploading && <Loader/>}
             </Form.Group>
 
             <Form.Group controlId="brand">

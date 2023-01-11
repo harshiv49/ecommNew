@@ -72,8 +72,8 @@ const ProductScreen = () => {
   return (
     <div>
       <Link to="/" className="btn btn-light my-3">
-        {" "}
-        Go back{" "}
+       
+        Go back
       </Link>
       {loading ? (
         <Loader></Loader>

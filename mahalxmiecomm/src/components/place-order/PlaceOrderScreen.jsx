@@ -49,13 +49,14 @@ function PlaceOrder() {
       navigate('/payment')
     }
   },[paymentMethod,navigate])
+
   useEffect(()=>{
     if(success){
       navigate(`/order/${order._id}`)
       dispatch({type:'ORDER_CREATE_RESET'})
       dispatch(clearCart())
     }
-  },[dispatch,success,navigate,order._id])
+  },[dispatch,success,navigate])
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4></CheckoutSteps>

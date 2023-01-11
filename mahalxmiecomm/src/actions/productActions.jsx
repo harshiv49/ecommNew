@@ -208,3 +208,16 @@ export const createProductReview= (productId,review) => async (dispatch,getState
     });
   }
 };
+
+
+export const listTopProducts=()=>async (dispatch)=>{
+   
+  try{
+      dispatch({loading:true,type:'PRODUCTS_TOP_REQUEST'})
+      const {data}=await axios.get(`/api/products/top/`)
+      dispatch({loading:false,type:'PRODUCTS_TOP_SUCCESS',payload:data})
+  }
+  catch(error){
+      dispatch({laoding:false,type:'PRODUCTS_TOP_FAIL',payload:error.response&&error.response.data.detail?error.response.data.detail:error.message})
+  }
+}

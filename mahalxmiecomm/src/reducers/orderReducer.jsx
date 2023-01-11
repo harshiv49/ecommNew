@@ -21,6 +21,12 @@ export const myOrderTypes={
     ORDER_ADMIN_LIST_FAIL:'ORDER_ADMIN_LIST_FAIL',
     ORDER_ADMIN_LIST_RESET:'ORDER_ADMIN_LIST_RESET',
 
+
+    ORDER_LIST_MY_REQUEST:'ORDER_LIST_MY_REQUEST',
+    ORDER_LIST_MY_SUCCESS:'ORDER_LIST_MY_SUCCESS',
+    ORDER_LIST_MY_FAIL:'ORDER_LIST_MY_FAIL',
+    ORDER_LIST_MY_RESET:'ORDER_LIST_MY_RESET',
+
 }
 
 export const orderCreateReducer=(state={},action)=>{
@@ -52,7 +58,7 @@ export const orderCreateReducer=(state={},action)=>{
 }
 
 
-export const orderDetailsReducer=(state={loading:true,orderItems:[],shippingAddress:{}},action)=>{
+export const orderDetailsReducer=(state={loading:true,orderItems:[],shippingAddress:{},user:{}},action)=>{
     const {type,payload}=action
     switch(type){
         case myOrderTypes.ORDER_DETAILS_REQUEST:
@@ -139,4 +145,32 @@ export const adminListReducer=(state={orders:[]},action)=>{
   }
 }
   
+
+
+export const orderListMyReducer=(state={orders:[]},action)=>{
+    const {type,payload}=action
+    switch(type){
+        case myOrderTypes.ORDER_LIST_MY_REQUEST:
+            return{
+                ...state,
+                loading:true
+            }
+        case myOrderTypes.ORDER_LIST_MY_SUCCESS:
+            return{
+                loading:false,
+                orders:payload
+               
+            }
+        case myOrderTypes.ORDER_LIST_MY_FAIL:
+            return{
+                loading:false,
+                error:payload
+            }
+        case myOrderTypes.ORDER_LIST_MY_RESET:
+            return {orders:[]}
+        default:
+            return state
+
+    }
+}
 
